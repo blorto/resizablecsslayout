@@ -564,12 +564,12 @@ public class ResizableVCssLayout extends VCssLayout implements
                 stopCursorOverride();
                 unmarkBoundaryResizing();
 
-                fireResizeEnd(WidgetUtil.getRequiredWidth(dragOverlayElement),
-                        WidgetUtil.getRequiredHeight(dragOverlayElement));
-
                 if (autoAcceptResize) {
                     acceptResize(true);
                 }
+
+                fireResizeEnd(WidgetUtil.getRequiredWidth(dragOverlayElement),
+                        WidgetUtil.getRequiredHeight(dragOverlayElement));
             }
         }
 

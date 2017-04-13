@@ -1,10 +1,11 @@
-# ResizableCssLayout Add-on for Vaadin 7
+# ResizableCssLayout Add-on for Vaadin 8
 
-ResizableCssLayout is an UI component add-on for Vaadin 7.
+ResizableCssLayout is an UI component add-on for Vaadin 8.
+
 
 ## Online demo
 
-Try the add-on demo at http://pekka.app.fi/resizablecsslayout-demo/
+Try the add-on demo at http://pekka.app.fi/resizablecsslayout-demo/ (vaadin 7 demo)
 
 ## Download release
 
@@ -50,6 +51,8 @@ Another way of debugging client-side is superdev mode. To enable it, uncomment d
 
  
 ## Release notes
+### Version 1.2.0
+- compiled for working for Vaadin Framework 8.0.5 
 
 ### Version 1.1.0
 - Support keeping aspect ratio when resizing <a href="https://github.com/pleku/resizablecsslayout/issues/1">#1</a>

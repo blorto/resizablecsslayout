@@ -50,9 +50,9 @@ public class ResizableCssLayout extends com.vaadin.ui.CssLayout {
         public void onResizeEnd(int height, int width) {
             pendingHeight = height;
             pendingWidth = width;
-            fireResizeEnd(height, width);
             resizing = false;
             respondResizeAcceptance();
+            fireResizeEnd(height, width);
         }
 
         @Override

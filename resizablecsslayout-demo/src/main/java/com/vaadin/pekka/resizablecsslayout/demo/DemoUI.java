@@ -1,42 +1,23 @@
 package com.vaadin.pekka.resizablecsslayout.demo;
 
-import java.util.Set;
-
 import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.Title;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.event.SelectionEvent;
-import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.data.HasValue;
 import com.vaadin.pekka.resizablecsslayout.ResizableCssLayout;
-import com.vaadin.pekka.resizablecsslayout.ResizableCssLayout.ResizeCancelEvent;
-import com.vaadin.pekka.resizablecsslayout.ResizableCssLayout.ResizeEndEvent;
-import com.vaadin.pekka.resizablecsslayout.ResizableCssLayout.ResizeListener;
-import com.vaadin.pekka.resizablecsslayout.ResizableCssLayout.ResizeStartEvent;
 import com.vaadin.pekka.resizablecsslayout.client.ResizeLocation;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.AbsoluteLayout;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Image;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.server.VaadinServlet;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
-@Theme("demo")
-@Title("ResizableCssLayout Add-on Demo")
-@SuppressWarnings("serial")
+import javax.servlet.annotation.WebServlet;
+import java.util.ArrayList;
+
+/**
+ * Created by ptandon on 4/13/17.
+ */
+@Theme("mytheme")
 public class DemoUI extends UI {
 
     private ResizableCssLayout gridWrapper;
@@ -52,7 +33,7 @@ public class DemoUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        final Grid grid = createGrid();
+        final Grid<GridExampleBean> grid = createGrid();
         gridWrapper = new ResizableCssLayout();
         gridWrapper.setResizable(true);
         gridWrapper.setHeight("400px");
@@ -96,44 +77,39 @@ public class DemoUI extends UI {
 
     }
 
-    private Layout createForm(final Grid grid) {
+    private Layout createForm(final Grid<GridExampleBean> grid) {
         final VerticalLayout formLayout = new VerticalLayout();
         formLayout.setSizeFull();
-        grid.addSelectionListener(new SelectionListener() {
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public void select(SelectionEvent event) {
-                formLayout.removeAllComponents();
-                Set<Object> selected = event.getSelected();
-                if (!selected.isEmpty()) {
-                    Object next = selected.iterator().next();
-                    BeanItem<GridExampleBean> beanItem = (BeanItem<GridExampleBean>) grid
-                            .getContainerDataSource().getItem(next);
-                    FieldGroup fieldGroup = new FieldGroup(beanItem);
-                    fieldGroup.setBuffered(false);
-                    for (Object propertyId : beanItem.getItemPropertyIds()) {
-                        formLayout.addComponent(fieldGroup
-                                .buildAndBind(propertyId));
-                    }
-                    for (Component component : formLayout) {
-                        formLayout.setComponentAlignment(component,
-                                Alignment.MIDDLE_CENTER);
-                    }
-                }
-            }
-        });
-        grid.select(grid.getContainerDataSource().getIdByIndex(0));
+//        grid.addSelectionListener(new SelectionListener<GridExampleBean>() {
+//            @Override
+//            public void selectionChange(SelectionEvent<GridExampleBean> event) {
+//
+//                formLayout.removeAllComponents();
+//                Optional<GridExampleBean> selected = event.getFirstSelectedItem();
+//                selected.ifPresent(beanItem -> {
+//                    FieldGroup fieldGroup = new FieldGroup(beanItem);
+//                    fieldGroup.setBuffered(false);
+//                    for (Object propertyId : beanItem.getItemPropertyIds()) {
+//                        formLayout.addComponent(fieldGroup
+//                                .buildAndBind(propertyId));
+//                    }
+//                    for (Component component : formLayout) {
+//                        formLayout.setComponentAlignment(component,
+//                                Alignment.MIDDLE_CENTER);
+//                    }
+//                });
+//            }
+//        });
+        grid.select(container.get(0));
         return formLayout;
     }
 
     private HorizontalLayout createOptions() {
         final CheckBox autoAcceptResize = new CheckBox("Auto accept resize",
                 gridWrapper.isAutoAcceptResize());
-        autoAcceptResize.addValueChangeListener(new ValueChangeListener() {
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
+        autoAcceptResize.addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
+            public void valueChange(HasValue.ValueChangeEvent<Boolean> event) {
                 gridWrapper.setAutoAcceptResize(autoAcceptResize.getValue());
                 formWrapper.setAutoAcceptResize(autoAcceptResize.getValue());
                 imageWrapper.setAutoAcceptResize(autoAcceptResize.getValue());
@@ -143,10 +119,8 @@ public class DemoUI extends UI {
 
         cancelResizeToggle = new CheckBox("Cancel resize on server");
         cancelResizeToggle.setEnabled(!gridWrapper.isAutoAcceptResize());
-        cancelResizeToggle.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
+        cancelResizeToggle.addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
+            public void valueChange(HasValue.ValueChangeEvent<Boolean> event) {
                 if (cancelResizeToggle.getValue()) {
                     listenerToggle.setValue(true);
                 }
@@ -156,10 +130,8 @@ public class DemoUI extends UI {
 
         final CheckBox toggleResizable = new CheckBox("Toggle resizable");
         toggleResizable.setValue(true);
-        toggleResizable.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
+        toggleResizable.addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
+            public void valueChange(HasValue.ValueChangeEvent<Boolean> event) {
                 gridWrapper.setResizable(toggleResizable.getValue());
                 formWrapper.setResizable(toggleResizable.getValue());
                 imageWrapper.setResizable(toggleResizable.getValue());
@@ -167,28 +139,24 @@ public class DemoUI extends UI {
         });
 
         final CheckBox aspectRatioToggle = new CheckBox("Keep Aspect Ratio");
-        aspectRatioToggle.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
+        aspectRatioToggle.addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
+            public void valueChange(HasValue.ValueChangeEvent<Boolean> event) {
                 gridWrapper.setKeepAspectRatio(aspectRatioToggle.getValue());
                 formWrapper.setKeepAspectRatio(aspectRatioToggle.getValue());
             }
         });
 
         listenerToggle = new CheckBox("Server side listener");
-        listenerToggle.addValueChangeListener(new ValueChangeListener() {
-            ResizeListener listener = new ResizeListener() {
+        listenerToggle.addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
+            ResizableCssLayout.ResizeListener listener = new ResizableCssLayout.ResizeListener() {
 
-                @Override
-                public void resizeStart(ResizeStartEvent event) {
+                public void resizeStart(ResizableCssLayout.ResizeStartEvent event) {
                     Notification.show("Resize Started",
                             "Location: " + event.getResizeLocation(),
                             Notification.Type.TRAY_NOTIFICATION);
                 }
 
-                @Override
-                public void resizeEnd(ResizeEndEvent event) {
+                public void resizeEnd(ResizableCssLayout.ResizeEndEvent event) {
                     if (!gridWrapper.isAutoAcceptResize()
                             && cancelResizeToggle.getValue()) {
                         Notification.show("Resize Ended - Canceled",
@@ -200,20 +168,18 @@ public class DemoUI extends UI {
                         gridWrapper.cancelResize();
                     } else {
                         Notification.show("Resize Ended", "Width / Height: "
-                                + event.getWidth() + "/" + event.getHeight(),
+                                        + event.getWidth() + "/" + event.getHeight(),
                                 Notification.Type.TRAY_NOTIFICATION);
                     }
                 }
 
-                @Override
-                public void resizeCancel(ResizeCancelEvent event) {
+                public void resizeCancel(ResizableCssLayout.ResizeCancelEvent event) {
                     Notification.show("Resize Canceled",
                             Notification.Type.TRAY_NOTIFICATION);
                 }
             };
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
+            public void valueChange(HasValue.ValueChangeEvent<Boolean> event) {
                 if (listenerToggle.getValue()) {
                     gridWrapper.addResizeListener(listener);
                     formWrapper.addResizeListener(listener);
@@ -243,57 +209,53 @@ public class DemoUI extends UI {
     }
 
     private ComboBox createResizeLocations() {
-        final ComboBox comboBox = new ComboBox("Available Resize Locations:");
+        final ComboBox<AvailableResizeLocations> comboBox =
+                new ComboBox<AvailableResizeLocations>("Available Resize Locations:");
         comboBox.addStyleName(ValoTheme.COMBOBOX_TINY);
-        comboBox.addItems(AvailableResizeLocations.values());
-        comboBox.select(AvailableResizeLocations.All);
-        comboBox.setNullSelectionAllowed(false);
-        comboBox.addValueChangeListener(new ValueChangeListener() {
+        comboBox.setItems(AvailableResizeLocations.values());
+        comboBox.setSelectedItem(AvailableResizeLocations.All);
+        comboBox.addValueChangeListener(new HasValue.ValueChangeListener<AvailableResizeLocations>() {
 
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                AvailableResizeLocations value = (AvailableResizeLocations) event
-                        .getProperty().getValue();
-                final ResizeLocation resizeLocation = ResizeLocation
-                        .valueOf(value.toString().toUpperCase());
+            public void valueChange(HasValue.ValueChangeEvent<AvailableResizeLocations> event) {
+                AvailableResizeLocations value = event.getValue();
+                final ResizeLocation resizeLocation = ResizeLocation.valueOf(value.toString().toUpperCase());
                 switch (value) {
-                case All:
-                    gridWrapper.setAllLocationsResizable();
-                    formWrapper.setAllLocationsResizable();
-                    imageWrapper.setAllLocationsResizable();
-                    break;
-                case Corners:
-                    gridWrapper.setCornersResizable();
-                    formWrapper.setCornersResizable();
-                    imageWrapper.setCornersResizable();
-                    break;
-                case Sides:
-                    gridWrapper.setSidesResizable();
-                    formWrapper.setSidesResizable();
-                    imageWrapper.setCornersResizable();
-                    break;
-                default:
-                    gridWrapper.setResizeLocations(resizeLocation);
-                    formWrapper.setResizeLocations(resizeLocation);
-                    imageWrapper.setResizeLocations(resizeLocation);
-                    break;
+                    case All:
+                        gridWrapper.setAllLocationsResizable();
+                        formWrapper.setAllLocationsResizable();
+                        imageWrapper.setAllLocationsResizable();
+                        break;
+                    case Corners:
+                        gridWrapper.setCornersResizable();
+                        formWrapper.setCornersResizable();
+                        imageWrapper.setCornersResizable();
+                        break;
+                    case Sides:
+                        gridWrapper.setSidesResizable();
+                        formWrapper.setSidesResizable();
+                        imageWrapper.setCornersResizable();
+                        break;
+                    default:
+                        gridWrapper.setResizeLocations(resizeLocation);
+                        formWrapper.setResizeLocations(resizeLocation);
+                        imageWrapper.setResizeLocations(resizeLocation);
+                        break;
                 }
             }
         });
         return comboBox;
     }
 
-    private Grid createGrid() {
-        BeanItemContainer<GridExampleBean> container = new BeanItemContainer<GridExampleBean>(
-                GridExampleBean.class);
+    ArrayList<GridExampleBean> container = new ArrayList<GridExampleBean>();
+
+    private Grid<GridExampleBean> createGrid() {
         for (int i = 0; i < 1000; i++) {
-            container.addItem(new GridExampleBean("Bean " + i, i * i, i / 10d));
+            container.add(new GridExampleBean("Bean " + i, i * i, i / 10d));
         }
-        Grid grid = new Grid();
-        grid.setContainerDataSource(container);
-        grid.getColumn("name").setExpandRatio(2);
+        Grid<GridExampleBean> grid = new Grid<GridExampleBean>(GridExampleBean.class);
+        grid.setItems(container);
         grid.setSizeFull();
-        grid.setSelectionMode(SelectionMode.SINGLE);
+        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
         return grid;
     }
 
@@ -338,5 +300,10 @@ public class DemoUI extends UI {
         public double getSum() {
             return getAmount() * getCount();
         }
+    }
+
+    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
+    @VaadinServletConfiguration(ui = DemoUI.class, productionMode = false)
+    public static class MyUIServlet extends VaadinServlet {
     }
 }

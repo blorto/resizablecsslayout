@@ -1,1 +1,0 @@
-Vaadin-Stylesheets: VAADIN/addons/resizablecsslayout/resizablecsslayout.scss

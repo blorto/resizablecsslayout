@@ -1,28 +1,85 @@
-*.class
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
+# Eclipse
 .classpath
 .project
 .settings
 
-.DS_Store
+# /
+/.cvsignore
+/.tomcatplugin
+/work
+/.gwt-cache
+/.externalToolBuilders
+/extras
 
+uitest/src/main/themes/VAADIN/themes/**/styles.css
+
+# Persisted scss cache files
+target
+bin
+styles.scss.cache
 styles.css
-*.cache
+addons.scss
+uitest/src/main/themes/VAADIN/themes/**/styles.scss.cache
+
+# /build/
+/build/result
+/build/gwt
+/build/checkout
+/build/classes
+/build/test-output
+/build/integration-test-output
+/build/buildhelpers/com/vaadin/buildhelpers/*.class
+
+# /tests/
+/tests/junit*.properties
+
+# /bin/
+/bin
+
+# Mac
+*.DS_Store
+
+# Python
+scripts/*.pyc
+
+# build result folders
+*/result
+result
+target/
+all/target/
+push/target/
+shared/target/
+server/target/
+client/target/
+client-compiler/target/
+buildhelpers/target/
+client-compiled/target/
+liferay/target/
+themes/target/
+uitest/target/
+widgets/target/
+
+.sass-cache
+phantomjsdriver.log
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### JRebel ###
 rebel.xml
 
-*.iml
+*/.checkstyle
 
-*.launch
-
-resizablecsslayout-demo/src/main/webapp/VAADIN/widgetsets/*
-*/assembly/*
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# TB default error screenshot folder
+error-screenshots/
