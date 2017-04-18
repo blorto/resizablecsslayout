@@ -35,6 +35,7 @@ public class DemoUI extends UI {
     protected void init(VaadinRequest request) {
         final Grid<GridExampleBean> grid = createGrid();
         gridWrapper = new ResizableCssLayout();
+        gridWrapper.setAutoAcceptResize(false);
         gridWrapper.setResizable(true);
         gridWrapper.setHeight("400px");
         gridWrapper.setWidth("400px");
@@ -43,6 +44,7 @@ public class DemoUI extends UI {
 
         Layout form = createForm(grid);
         formWrapper = new ResizableCssLayout(form);
+        formWrapper.setAutoAcceptResize(false);
         formWrapper.setResizable(true);
         formWrapper.setCaption("Resize form");
         formWrapper.setHeight("250px");
@@ -51,6 +53,7 @@ public class DemoUI extends UI {
         Image image = new Image(null, new ThemeResource("img/swan.jpg"));
         image.setSizeFull();
         imageWrapper = new ResizableCssLayout(image);
+        imageWrapper.setAutoAcceptResize(false);
         imageWrapper.setResizable(true);
         imageWrapper.setKeepAspectRatio(true);
         imageWrapper.setCaption("Image keeps aspect ratio");
@@ -108,42 +111,35 @@ public class DemoUI extends UI {
         final CheckBox autoAcceptResize = new CheckBox("Auto accept resize",
                 gridWrapper.isAutoAcceptResize());
 
-        autoAcceptResize.addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
-            public void valueChange(HasValue.ValueChangeEvent<Boolean> event) {
-                gridWrapper.setAutoAcceptResize(autoAcceptResize.getValue());
-                formWrapper.setAutoAcceptResize(autoAcceptResize.getValue());
-                imageWrapper.setAutoAcceptResize(autoAcceptResize.getValue());
-                cancelResizeToggle.setEnabled(!autoAcceptResize.getValue());
-            }
+        autoAcceptResize.addValueChangeListener((HasValue.ValueChangeListener<Boolean>) event -> {
+            boolean newValue = event.getValue();
+            gridWrapper.setAutoAcceptResize(newValue);
+            formWrapper.setAutoAcceptResize(newValue);
+            imageWrapper.setAutoAcceptResize(newValue);
+            cancelResizeToggle.setEnabled(!newValue);
         });
 
         cancelResizeToggle = new CheckBox("Cancel resize on server");
         cancelResizeToggle.setEnabled(!gridWrapper.isAutoAcceptResize());
-        cancelResizeToggle.addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
-            public void valueChange(HasValue.ValueChangeEvent<Boolean> event) {
-                if (cancelResizeToggle.getValue()) {
-                    listenerToggle.setValue(true);
-                }
-
+        cancelResizeToggle.addValueChangeListener((HasValue.ValueChangeListener<Boolean>) event -> {
+            if (cancelResizeToggle.getValue()) {
+                listenerToggle.setValue(true);
             }
+
         });
 
         final CheckBox toggleResizable = new CheckBox("Toggle resizable");
         toggleResizable.setValue(true);
-        toggleResizable.addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
-            public void valueChange(HasValue.ValueChangeEvent<Boolean> event) {
-                gridWrapper.setResizable(toggleResizable.getValue());
-                formWrapper.setResizable(toggleResizable.getValue());
-                imageWrapper.setResizable(toggleResizable.getValue());
-            }
+        toggleResizable.addValueChangeListener((HasValue.ValueChangeListener<Boolean>) event -> {
+            gridWrapper.setResizable(toggleResizable.getValue());
+            formWrapper.setResizable(toggleResizable.getValue());
+            imageWrapper.setResizable(toggleResizable.getValue());
         });
 
         final CheckBox aspectRatioToggle = new CheckBox("Keep Aspect Ratio");
-        aspectRatioToggle.addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
-            public void valueChange(HasValue.ValueChangeEvent<Boolean> event) {
-                gridWrapper.setKeepAspectRatio(aspectRatioToggle.getValue());
-                formWrapper.setKeepAspectRatio(aspectRatioToggle.getValue());
-            }
+        aspectRatioToggle.addValueChangeListener((HasValue.ValueChangeListener<Boolean>) event -> {
+            gridWrapper.setKeepAspectRatio(aspectRatioToggle.getValue());
+            formWrapper.setKeepAspectRatio(aspectRatioToggle.getValue());
         });
 
         listenerToggle = new CheckBox("Server side listener");
@@ -165,7 +161,6 @@ public class DemoUI extends UI {
                                 Notification.Type.TRAY_NOTIFICATION);
                         gridWrapper.cancelResize();
                         formWrapper.cancelResize();
-                        gridWrapper.cancelResize();
                     } else {
                         Notification.show("Resize Ended", "Width / Height: "
                                         + event.getWidth() + "/" + event.getHeight(),
