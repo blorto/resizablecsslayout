@@ -36,8 +36,7 @@ public class ResizableCssLayout extends com.vaadin.ui.CssLayout {
 
     private ResizableCssLayoutServerRpc rpc = new ResizableCssLayoutServerRpc() {
         @Override
-        public void onResizeStart(ResizeLocation resizeLocation, int height,
-                int width) {
+        public void onResizeStart(ResizeLocation resizeLocation, int height, int width) {
             acceptResize = true;
             latestResizeLocation = resizeLocation;
             initialHeight = height;
@@ -83,11 +82,9 @@ public class ResizableCssLayout extends com.vaadin.ui.CssLayout {
     /**
      * When the component is not in auto accept resize mode (
      * {@link #isAutoAcceptResize()} and there is a resize pending
-     * {@link #isResizing()}, the resize can be cancelled with this method from
-     * a
+     * {@link #isResizing()}, the resize can be cancelled with this method from a
      * {@link com.vaadin.pekka.resizablecsslayout.ResizableCssLayout.ResizeListener}
-     * when the the
-     * {@link com.vaadin.pekka.resizablecsslayout.ResizableCssLayout.ResizeEndEvent}
+     * when the the {@link com.vaadin.pekka.resizablecsslayout.ResizableCssLayout.ResizeEndEvent}
      * events are fired.
      * <p>
      * If this method is not triggered, the resize will be accepted.
@@ -101,8 +98,7 @@ public class ResizableCssLayout extends com.vaadin.ui.CssLayout {
      */
     protected void respondResizeAcceptance() {
         if (!getState(false).autoAcceptResize) {
-            getRpcProxy(ResizableCssLayoutClientRpc.class).acceptResize(
-                    acceptResize);
+            getRpcProxy(ResizableCssLayoutClientRpc.class).acceptResize(acceptResize);
             if (acceptResize) {
                 internalAccept();
             }
@@ -132,36 +128,36 @@ public class ResizableCssLayout extends com.vaadin.ui.CssLayout {
         if (parentContainer instanceof AbsoluteLayout) {
             AbsoluteLayout absoluteLayout = (AbsoluteLayout) parentContainer;
             switch (latestResizeLocation) {
-            case TOP_LEFT:
-                moveLeft(initialWidth - pendingWidth, absoluteLayout,
-                        positionHolder);
-            case TOP:
-                moveTop(initialHeight - pendingHeight, absoluteLayout,
-                        positionHolder);
-                break;
-            case TOP_RIGHT:
-                moveTop(initialHeight - pendingHeight, absoluteLayout,
-                        positionHolder);
-            case RIGHT:
-                moveRight(initialWidth - pendingWidth, absoluteLayout,
-                        positionHolder);
-                break;
-            case BOTTOM_RIGHT:
-                moveRight(initialWidth - pendingWidth, absoluteLayout,
-                        positionHolder);
-            case BOTTOM:
-                moveBottom(initialHeight - pendingHeight, absoluteLayout,
-                        positionHolder);
-                break;
-            case BOTTOM_LEFT:
-                moveBottom(initialHeight - pendingHeight, absoluteLayout,
-                        positionHolder);
-            case LEFT:
-                moveLeft(initialWidth - pendingWidth, absoluteLayout,
-                        positionHolder);
-                break;
-            default:
-                break;
+                case TOP_LEFT:
+                    moveLeft(initialWidth - pendingWidth, absoluteLayout,
+                            positionHolder);
+                case TOP:
+                    moveTop(initialHeight - pendingHeight, absoluteLayout,
+                            positionHolder);
+                    break;
+                case TOP_RIGHT:
+                    moveTop(initialHeight - pendingHeight, absoluteLayout,
+                            positionHolder);
+                case RIGHT:
+                    moveRight(initialWidth - pendingWidth, absoluteLayout,
+                            positionHolder);
+                    break;
+                case BOTTOM_RIGHT:
+                    moveRight(initialWidth - pendingWidth, absoluteLayout,
+                            positionHolder);
+                case BOTTOM:
+                    moveBottom(initialHeight - pendingHeight, absoluteLayout,
+                            positionHolder);
+                    break;
+                case BOTTOM_LEFT:
+                    moveBottom(initialHeight - pendingHeight, absoluteLayout,
+                            positionHolder);
+                case LEFT:
+                    moveLeft(initialWidth - pendingWidth, absoluteLayout,
+                            positionHolder);
+                    break;
+                default:
+                    break;
             }
         }
         setWidth(pendingWidth, Unit.PIXELS);
@@ -173,15 +169,11 @@ public class ResizableCssLayout extends com.vaadin.ui.CssLayout {
      * {@link com.vaadin.ui.AbsoluteLayout} and top position was set with
      * pixels.
      *
-     * @param delta
-     *            the change of top position in pixels
-     * @param the
-     *            absolute layout that contains the component
-     * @param positionHolder
-     *            the component that is inside the absolute layout
+     * @param delta          the change of top position in pixels
+     * @param absoluteLayout absolute layout that contains the component
+     * @param positionHolder the component that is inside the absolute layout
      */
-    protected void moveTop(int delta, AbsoluteLayout absoluteLayout,
-            Component positionHolder) {
+    protected void moveTop(int delta, AbsoluteLayout absoluteLayout, Component positionHolder) {
         ComponentPosition position = absoluteLayout.getPosition(positionHolder);
         if (position.getTopValue() != null
                 && position.getTopUnits().equals(Unit.PIXELS)) {
@@ -201,15 +193,11 @@ public class ResizableCssLayout extends com.vaadin.ui.CssLayout {
      * {@link com.vaadin.ui.AbsoluteLayout} and bottom position was set with
      * pixels.
      *
-     * @param delta
-     *            the change of bottom position in pixels
-     * @param the
-     *            absolute layout that contains the component
-     * @param positionHolder
-     *            the component that is inside the absolute layout
+     * @param delta          the change of bottom position in pixels
+     * @param absoluteLayout absolute layout that contains the component
+     * @param positionHolder the component that is inside the absolute layout
      */
-    protected void moveBottom(int delta, AbsoluteLayout absoluteLayout,
-            Component positionHolder) {
+    protected void moveBottom(int delta, AbsoluteLayout absoluteLayout, Component positionHolder) {
         ComponentPosition position = absoluteLayout.getPosition(positionHolder);
         if (position.getBottomValue() != null
                 && position.getBottomUnits().equals(Unit.PIXELS)) {
@@ -229,14 +217,11 @@ public class ResizableCssLayout extends com.vaadin.ui.CssLayout {
      * {@link com.vaadin.ui.AbsoluteLayout} and right position was set with
      * pixels.
      *
-     * @param delta
-     *            the change of right position in pixels
-     * @param the
-     *            absolute layout that contains the component
+     * @param delta          the change of right position in pixels
+     * @param absoluteLayout absolute layout that contains the component
      * @param positionHolder
      */
-    protected void moveRight(int delta, AbsoluteLayout absoluteLayout,
-            Component positionHolder) {
+    protected void moveRight(int delta, AbsoluteLayout absoluteLayout, Component positionHolder) {
         ComponentPosition position = absoluteLayout.getPosition(positionHolder);
         if (position.getRightValue() != null
                 && position.getRightUnits().equals(Unit.PIXELS)) {
@@ -256,15 +241,11 @@ public class ResizableCssLayout extends com.vaadin.ui.CssLayout {
      * {@link com.vaadin.ui.AbsoluteLayout} and left position was set with
      * pixels.
      *
-     * @param delta
-     *            the change of left position in pixels
-     * @param the
-     *            absolute layout that contains the component
-     * @param positionHolder
-     *            the component that is inside the absolute layout
+     * @param delta          the change of left position in pixels
+     * @param absoluteLayout absolute layout that contains the component
+     * @param positionHolder the component that is inside the absolute layout
      */
-    protected void moveLeft(int delta, AbsoluteLayout absoluteLayout,
-            Component positionHolder) {
+    protected void moveLeft(int delta, AbsoluteLayout absoluteLayout, Component positionHolder) {
         ComponentPosition position = absoluteLayout.getPosition(positionHolder);
         if (position.getLeftValue() != null
                 && position.getLeftUnits().equals(Unit.PIXELS)) {
@@ -469,8 +450,7 @@ public class ResizableCssLayout extends com.vaadin.ui.CssLayout {
         removeListener(ResizeEndEvent.class, listener);
     }
 
-    protected void fireResizeStart(ResizeLocation resizeLocation, int height,
-            int width) {
+    protected void fireResizeStart(ResizeLocation resizeLocation, int height, int width) {
         fireEvent(new ResizeStartEvent(this, resizeLocation, height, width));
     }
 
@@ -519,8 +499,7 @@ public class ResizableCssLayout extends com.vaadin.ui.CssLayout {
         private final int height;
         private final int width;
 
-        public ResizeStartEvent(Component source,
-                ResizeLocation resizeLocation, int height, int width) {
+        public ResizeStartEvent(Component source, ResizeLocation resizeLocation, int height, int width) {
             super(source);
             this.resizeLocation = resizeLocation;
             this.height = height;
