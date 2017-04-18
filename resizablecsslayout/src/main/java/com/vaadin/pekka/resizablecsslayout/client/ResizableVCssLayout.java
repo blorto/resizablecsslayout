@@ -388,12 +388,19 @@ public class ResizableVCssLayout extends VCssLayout implements
                             targetParent.getParentElement()))) {
                 switch (event.getTypeInt()) {
                 case Event.ONMOUSEMOVE:
+                    event.preventDefault();
+                    event.stopPropagation();
                     onMouseMove(event);
                     break;
                 case Event.ONMOUSEDOWN:
+                    event.preventDefault();
+                    event.stopPropagation();
                     onResizeStart(event, target);
                     break;
                 case Event.ONMOUSEUP:
+                    event.preventDefault();
+                    event.stopPropagation();
+                    onMouseMove(event);
                     onResizeEnd(event);
                     break;
                 default:
@@ -414,8 +421,8 @@ public class ResizableVCssLayout extends VCssLayout implements
                 if (!isInVerticalBoundary(event)) {
                     // set the size to the edge of the boundary element
                     clientY = clientY < boundaryElement.getAbsoluteTop() ? (boundaryElement
-                            .getAbsoluteTop() + 2) : (boundaryElement
-                            .getAbsoluteBottom() - 2);
+                            .getAbsoluteTop()) : (boundaryElement
+                            .getAbsoluteBottom());
                 }
                 int extraScrollHeight = boundaryElement == null ? 0
                         : boundaryElement.getScrollTop();
@@ -423,7 +430,6 @@ public class ResizableVCssLayout extends VCssLayout implements
                         + extraScrollHeight
                         + (revertY ? startClientY - clientY : clientY
                                 - startClientY);
-                event.stopPropagation();
             }
 
             if (resizingX) {
@@ -431,8 +437,8 @@ public class ResizableVCssLayout extends VCssLayout implements
                 if (!isInHorizontalBoundary(event)) {
                     // set the size to the edge of the boundary element
                     clientX = clientX < boundaryElement.getAbsoluteLeft() ? (boundaryElement
-                            .getAbsoluteLeft() + 2) : (boundaryElement
-                            .getAbsoluteRight() - 2);
+                            .getAbsoluteLeft() ) : (boundaryElement
+                            .getAbsoluteRight() );
                 }
                 int extraScrollWidth = boundaryElement == null ? 0
                         : boundaryElement.getScrollLeft();
@@ -440,7 +446,6 @@ public class ResizableVCssLayout extends VCssLayout implements
                         + extraScrollWidth
                         + (revertX ? startClientX - clientX : clientX
                                 - startClientX);
-                event.stopPropagation();
             }
 
             if (keepAspectRatio && (height > -1.0 || width > 1.0)) {
@@ -457,7 +462,6 @@ public class ResizableVCssLayout extends VCssLayout implements
                     } else {
                         width = startWidth * hRatio;
                     }
-
                 }
 
                 dragOverlayElement.getStyle().setHeight(height, Unit.PX);
